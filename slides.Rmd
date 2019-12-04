@@ -1,0 +1,320 @@
+---
+title: "Hough Transform"
+date: "2019-11-11"
+output:
+  xaringan::moon_reader:
+    css: ["default"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# The Hough Transform
+
+--
+
+- Transformation:
+
+$$r = x \cos \theta + y \sin \theta$$
+
+.center[
+<!-- <img src="images/Caleb/hough_representation.png" width="50%" align="center" /> -->
+<img src="images/Caleb/hough_representation.png" width="30%" align="center" />
+]
+
+- Nonconvex Optimization Problem
+
+---
+
+# Hough Transformation Steps
+
+.center[
+<!-- <img src="images/Caleb/hough_steps.png" width="50%" align="center" /> -->
+<img src="images/Caleb/hough_steps.png" width="100%" align="center" />
+]
+
+---
+
+# Hough Transformation Result
+
+.center[
+<img src="images/Caleb/hough_space.png" width="100%" align="center" />
+]
+
+---
+
+# Limitations
+
+- How to deal with thick lines?
+- How many lines do we want to detect?
+
+---
+
+# Detecting Roads
+
+.center[
+<img src="images/Caleb/ada_hayden.png" width="100%" align="center" />
+]
+
+---
+
+# Result
+
+.center[
+<img src="images/Caleb/ada_res.png" width="100%" align="center" />
+]
+
+---
+
+class: inverse, center, middle
+
+# Linear Hough Transform Applied to Bullet Data
+
+## Charlotte Roiger
+
+---
+
+# Motivation
+
+.center[
+<img src="images/Charlotte/csi-orig.jpeg" width="200%" align="center" />
+]
+
+---
+
+# Motivation
+
+.center[
+<img src="images/Charlotte/csi.jpeg" width="200%" align="center" />
+]
+
+---
+
+# Motivation
+
+.pull-left[
+<img src="images/Charlotte/gun-L5-B3-l1.png" width="100%" align="center" />
+]
+
+.pull-right[
+<img src="images/Charlotte/sig.png" width="1000%" align="center" />
+]
+
+
+
+
+
+Signatures curtesy of Heike Hofmann:https://heike.github.io/bulletxtrctr/
+---
+
+# Motivation
+
+.center[
+<img src="images/Charlotte/p7-original.png" width="100%" align="center" />
+]
+
+---
+
+# Reduce to 2D
+
+.center[
+<img src="images/Charlotte/strong-threshold.png" width="100%" align="center" />
+]
+
+---
+
+# Detect Grooves
+
+.center[
+<img src="images/Charlotte/Hamby252_Bullet1_Land1_hough_lines_process_step_one.png" width="100%" align="center" />]
+
+
+---
+
+# Normalized Scores
+.center[
+<img src="images/Charlotte/calc-xbottom.png" width="100%" align="center" />]
+
+
+---
+
+# Results: Successes
+
+.center[
+<img src="images/Charlotte/br411_3d.png" width="100%" align="center"  hspace="0" />
+]
+
+
+
+.center[
+<img src="images/Charlotte/mask_phoenix_nice.png" width="80%" align="center"  hspace="0" />
+]
+
+
+---
+
+# Results: Failures
+
+.center[
+<img src="images/Charlotte/hough-estimates-problem-boy.png" width="80%" align="center"  hspace="0" />
+]
+
+.center[
+<img src="images/Charlotte/mask_hamby_demo_lessnice.png" width="80%" align = "center"  hspace="0"/>
+]
+
+---
+class: inverse, center, middle
+
+# Circular Hough Transform
+
+## Joe Zemmels
+
+---
+
+## Circular Hough Transform
+
+- Detects center, $(x,y)$, of circle in an image given radius, $r$.
+ - (Left) Image of circle to be detected. 
+ - (Right) Accumulator array.
+
+```{r, fig.cap="", out.width="100%", fig.keep="hold", fig.align='center',echo=FALSE}
+knitr::include_graphics("images/Joe/houghTransformCircle.jpg")
+```
+
+---
+### Application: Breech Face Impressions
+
+.center[
+<!-- <img src="images/Joe/xtai_bfExample.png" width="50%" align="center" /> -->
+<img src="images/Joe/breechFaceExample.jpg" width="30%" align="center" />
+]
+
+.pull-left[
+<img src="images/Joe/breechFace.jpg" width="70%" align="center" />
+]
+
+.pull-right[
+<img src="images/Joe/breechFaceImpression.jpg" width="70%" align="center" />
+]
+
+---
+
+### Detecting Firing Pin Impression Circle
+
+- Goal: Detect and filter out inner circle in the image
+- Problem: Don't know radius ahead of time
+ - Need to estimate radius before applying Hough Transform
+
+.center[
+<img src="images/Joe/firingPinMinutiae.png" width="100%" align="center" />
+]
+
+---
+<!-- ### Identifying Firing Pin Impression Radius -->
+<!-- - Idea: Count non-NA pixels in each row of image.  -->
+<!--   - Determine where this count hits local maxima. -->
+
+
+<!-- <img src="images/Joe/nonNA_rowSums.png" width="90%" align="center" /> -->
+<!-- --- -->
+### Identifying Firing Pin Impression Radius
+
+- Test out a variety of radius values and choose the "best."
+ - (Left) Hough Tranform-selected circles of radius $r \in \{191,...,231\}$. 
+ - (Right) Accumulator arrays.
+
+.pull-left[
+<img src="images/Joe/houghTransformFilter.gif" width="100%" align="center" />
+]
+
+.pull-right[
+<img src="images/Joe/accumulator.gif" width="100%" align="center" hspace="0"/>
+]
+
+---
+<!-- ### Hough Score Heuristic -->
+<!-- - Identify consecutive radius values where Hough Score reaches consistently high values.  -->
+<!--  - Take average of those radius values. -->
+
+<!-- <img src="images/Joe/houghScorePlot.png" width="100%" align="center" /> -->
+<!-- --- -->
+
+
+### Successes & Failures
+
+.center[
+<img src="images/Joe/processedBF.png" width="60%" align="center" vspace="0"/>
+<img src="images/Joe/Fadul8-2_FadulX_beforeRotation.png" width="60%" align="center" vspace="0"/>
+]
+
+---
+
+class: inverse, center, middle
+
+# 3D Hough Transform
+
+## Lirong Xiang
+
+---
+
+# 3D line representation
+
+-  Roberts' line representation: a 3D line can be represented by $x'$, $y'$  and vector b. 
+
+```{r, out.width="95%", fig.keep="hold", fig.align='center',echo=FALSE}
+knitr::include_graphics("images/Lirong/3Drepresentation.png")
+```
+---
+
+-  comparison between 2D and 3D Hough Transform
+
+```{r, out.width="100%", fig.keep="hold", fig.align='center',echo=FALSE}
+knitr::include_graphics("images/Lirong/comparison.png")
+```
+---
+
+-  3D Hough line detection
+
+```{r, out.width="100%", fig.keep="hold", fig.align='center',echo=FALSE}
+knitr::include_graphics("images/Lirong/demo.png")
+```
+
+---
+
+### Applications 
+
+- Point cloud of a sorghum plant captured by Kinect v2
+
+.pull-left[
+<img src="images/Lirong/Picture1.png" width="100%" align="center" />
+]
+
+.pull-right[
+<img src="images/Lirong/pointcloud.gif" width="100%" align="center" />
+]
+
+---
+
+### Applications
+
+- 3D Hough line and plane detection
+
+.pull-left[
+<img src="images/Lirong/Picture2.png" width="100%" align="center" />
+]
+
+.pull-right[
+<img src="images/Lirong/detection.gif" width="100%" align="center" />
+]
+
+---
+
+### References
+
+1. Google Maps
+2. Wikipedia, "Hough Transform", "https://en.wikipedia.org/wiki/Hough_transform"
+3. StackOverflow,
+   "https://stackoverflow.com/questions/4709725/explain-hough-transformation"
